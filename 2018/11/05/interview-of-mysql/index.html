@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head><meta name="generator" content="Hexo 3.8.0">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="learnitwell是一个专注于IT技术分享的网站">
+    <meta name="keyword" content="">
+    <meta name="theme-color" content="#600090">
+    <meta name="msapplication-navbutton-color" content="#600090">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="#600090">
+    <link rel="shortcut icon" href="https://cdn4.iconfinder.com/data/icons/ionicons/512/icon-person-128.png">
+    <link rel="alternate" type="application/atom+xml" title="Learn IT Well" href="/atom.xml">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">
+    <link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.css">
+    <title>
+        
+        后端开发面试知识点之mysql｜undefined
+        
+    </title>
+
+    <link rel="canonical" href="http://learnitwell.net/2018/11/05/interview-of-mysql/">
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/blog-style.css">
+
+    <!-- Pygments Github CSS -->
+    <link rel="stylesheet" href="/css/syntax.css">
+</head>
+
+<style>
+
+    header.intro-header {
+        background-image: url('')
+    }
+</style>
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="" class="animated fadeIn">
+<!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top " id="nav-top" data-ispost="true" data-istags="false
+" data-ishome="false">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand animated pulse" href="/">
+                <span class="brand-logo">
+                    Learn IT Well
+                </span>
+                's Blog
+            </a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <!-- Known Issue, found by Hux:
+            <nav>'s height woule be hold on by its content.
+            so, when navbar scale out, the <nav> will cover tags.
+            also mask any touch event of tags, unfortunately.
+        -->
+        <!-- /.navbar-collapse -->
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+					
+                    
+                        
+							
+                        <li>
+                            <a href="/about/">关于</a>
+                        </li>
+							
+						
+                    
+					
+					
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!-- /.container -->
+</nav>
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+//    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        // CLOSE
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        // OPEN
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+<!-- Main Content -->
+
+<!--only post-->
+
+
+<img class="wechat-title-img" src="">
+
+
+<style>
+    
+    header.intro-header {
+        background-image: url('')
+    }
+
+    
+</style>
+
+<header class="intro-header">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 text-center">
+                <div class="post-heading">
+                    <h1>后端开发面试知识点之mysql</h1>
+                    
+                    <span class="meta">
+                         作者 艾逗笔
+                        <span>
+                          日期 2018-11-05
+                         </span>
+                    </span>
+                    <div class="tags text-center">
+                        
+                        <a class="tag" href="/tags/#后端开发" title="后端开发">后端开发</a>
+                        
+                        <a class="tag" href="/tags/#面试" title="面试">面试</a>
+                        
+                        <a class="tag" href="/tags/#数据库" title="数据库">数据库</a>
+                        
+                        <a class="tag" href="/tags/#mysql" title="mysql">mysql</a>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="post-title-haojen">
+        <span>
+            后端开发面试知识点之mysql
+        </span>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+            <!-- Post Container -->
+            <div class="col-lg-8 col-lg-offset-1 col-sm-9 post-container">
+                <h2 id="事务特性（ACID"><a href="#事务特性（ACID" class="headerlink" title="事务特性（ACID)"></a>事务特性（ACID)</h2><ul>
+<li>原子性：不可分割的操作单元，事务中所有操作，要么全部成功；要么撤回到执行事务之前的状态</li>
+<li>一致性：如果在执行事务之前数据库是一致的，那么在执行事务之后数据库也还是一致的；</li>
+<li>隔离性：事务操作之间彼此独立和透明互不影响。事务独立运行。这通常使用锁来实现。一个事务处理后的结果，影响了其他事务，那么其他事务会撤回。事务的100%隔离，需要牺牲速度。</li>
+<li>持久性：事务一旦提交，其结果就是永久的。即便发生系统故障，也能恢复。<a id="more"></a>
+</li>
+</ul>
+<h2 id="事务特性（ACID-1"><a href="#事务特性（ACID-1" class="headerlink" title="事务特性（ACID)"></a>事务特性（ACID)</h2><ul>
+<li>原子性：不可分割的操作单元，事务中所有操作，要么全部成功；要么撤回到执行事务之前的状态</li>
+<li>一致性：如果在执行事务之前数据库是一致的，那么在执行事务之后数据库也还是一致的；</li>
+<li>隔离性：事务操作之间彼此独立和透明互不影响。事务独立运行。这通常使用锁来实现。一个事务处理后的结果，影响了其他事务，那么其他事务会撤回。事务的100%隔离，需要牺牲速度。</li>
+<li>持久性：事务一旦提交，其结果就是永久的。即便发生系统故障，也能恢复。</li>
+</ul>
+<h2 id="事务的隔离级别"><a href="#事务的隔离级别" class="headerlink" title="事务的隔离级别"></a>事务的隔离级别</h2><ul>
+<li>read uncommited：使用查询语句不会加锁，可能会读到未提交的行（脏读）</li>
+<li>read commited：多次使用查询语句，可能得到不同的结果（不可重复读）</li>
+<li>repeatable read：多次读取会返回第一次读取的数据快照（幻读）</li>
+<li>serializable：innodb隐式的将全部查询语句加上共享锁（串行化）</li>
+</ul>
+<h2 id="脏读、幻读、不可重复读"><a href="#脏读、幻读、不可重复读" class="headerlink" title="脏读、幻读、不可重复读"></a>脏读、幻读、不可重复读</h2><ul>
+<li>脏读：读取到了未提交的数据，事务回滚后导致两次读取不一样，第一次读取的为脏数据</li>
+<li>不可重复读：读取过程中修改了数据，事务提交之后导致第二次读到的数据和第一次读到的不一样</li>
+<li>幻读：读取过程中插入或删除了新的记录，导致第二次读到的数据多了或少了一行，就像是出现了幻觉</li>
+</ul>
+<p>mysql默认使用repeatable read隔离级别。事务级别越严格，并发性能越低</p>
+<h2 id="mysql日志"><a href="#mysql日志" class="headerlink" title="mysql日志"></a>mysql日志</h2><ul>
+<li>回滚日志</li>
+<li>重做日志</li>
+<li>事务日志</li>
+</ul>
+<h2 id="数据表结构"><a href="#数据表结构" class="headerlink" title="数据表结构"></a>数据表结构</h2><ul>
+<li>表空间</li>
+<li>段</li>
+<li>区</li>
+<li>页</li>
+<li>行</li>
+</ul>
+<h2 id="索引原理"><a href="#索引原理" class="headerlink" title="索引原理"></a>索引原理</h2><ul>
+<li>索引是一种数据结构，能够加快数据查询速度</li>
+<li>索引的缺点是会有额外的开销</li>
+<li>mysql普遍使用B+Tree做索引</li>
+</ul>
+<h2 id="B-Tree、B-Tree"><a href="#B-Tree、B-Tree" class="headerlink" title="B+Tree、B-Tree"></a>B+Tree、B-Tree</h2><h2 id="聚集索引与非聚集索引"><a href="#聚集索引与非聚集索引" class="headerlink" title="聚集索引与非聚集索引"></a>聚集索引与非聚集索引</h2><ul>
+<li>聚集索引的表记录顺序与索引的顺序一直；非聚集索引指定了表中数据的逻辑顺序，但记录的物理顺序与索引的顺序不同</li>
+<li>聚集索引的叶节点就是数据节点；非聚集索引的叶节点还是索引节点，有一个指针指向数据节点</li>
+<li>每个表中最多只能有一个聚集索引</li>
+<li>表的主键默认为聚集索引</li>
+<li>聚集索引会降低insert和update的操作性能</li>
+<li>适合用聚集索引：列包含有限数目的不同值、查询结果返回一个区间的值、查询结果返回某值相同的大量结果集；适合用非聚集索引：列包含大量数目不同的值、查询结果返回少量结果集、order by子语句使用了列</li>
+</ul>
+<h2 id="最左匹配原则"><a href="#最左匹配原则" class="headerlink" title="最左匹配原则"></a>最左匹配原则</h2><h2 id="建索引的原则"><a href="#建索引的原则" class="headerlink" title="建索引的原则"></a>建索引的原则</h2><ul>
+<li>最左匹配原则。创建多列索引时，where子句中使用最频繁的字段放到最左边</li>
+<li>尽量选择数据区分度高的列建索引</li>
+<li>索引列不能参与计算</li>
+<li>尽量扩展索引，不要新增索引</li>
+</ul>
+<h2 id="sql优化"><a href="#sql优化" class="headerlink" title="sql优化"></a>sql优化</h2><ul>
+<li>where条件尽量避免使用!=和&lt;&gt;</li>
+<li>where条件尽量不要使用or进行查询</li>
+<li>数据字段设置默认值，where条件尽量避免使用is null</li>
+<li>避免使用select *</li>
+<li>order by走索引优化</li>
+<li>使用exists代替in</li>
+<li>使用varchar代替char</li>
+<li>能用distinct就不用order by</li>
+<li>能用union all就不用union（union会执行select distinct）</li>
+<li>尽量避免join，如果用了join，尽量使用建立过索引的相同类型的字段进行连接</li>
+</ul>
+<h2 id="myisam与innodb的区别"><a href="#myisam与innodb的区别" class="headerlink" title="myisam与innodb的区别"></a>myisam与innodb的区别</h2><ul>
+<li>存储结构。myisam在磁盘存储.frm .MYD .MYI三个文件，数据和索引分开存储；innodb数据和索引保存在同一个表空间</li>
+<li>存储空间。myisam可被压缩，存储空间小，支持静态表、动态表、压缩表三种存储格式；innodb需要更多的内存和存储，会在主内存中建立缓冲区用来缓冲数据和索引</li>
+<li>索引和记录存储。myisam索引和行记录是分开存储的，使用非聚集索引；innodb主键索引与行记录是存储在一起的，数据文件本身就是主索引，使用聚集索引</li>
+<li>事务支持。innodb支持事务，myisam不支持</li>
+<li>auto_increment。myisam可以和其他字段一起建立联合索引，自动增长列必须是索引，联合索引中可以不是第一列；innodb必须包含只有该字段的索引，自动增长列必须是索引，联合索引中必须是第一列</li>
+<li>锁差异。myisam只支持表锁，innodb支持表锁和行锁，行锁必须在where查询中使用主键</li>
+<li>全文索引。myisam支持全文索引，innodb不支持全文索引</li>
+<li>表主键。myisam可以没有任何的索引和主键；innodb如果没有设置主键或者非空唯一索引，就会自动创建6字节的主键</li>
+<li>表行数。myisam保存表的总行数，select count()更快；innodb没有保存表行数，select count()需要扫描全表，加了where条件的情况下两者效果一致</li>
+<li>外键。innodb支持外键，myisam不支持外键</li>
+<li>curd。如果大量的select操作，选择myisam。如果大量的更新操作，选择innodb</li>
+</ul>
+
+                <hr>
+                
+
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/2018/11/30/learnitwell/" data-toggle="tooltip" data-placement="top" title="Learn IT Well">&larr; Previous Post</a>
+                    </li>
+                    
+                    
+                    <li class="next">
+                        <a href="/2018/11/04/interview-of-redis/" data-toggle="tooltip" data-placement="top" title="后端开发面试知识点之redis">Next Post &rarr;</a>
+                    </li>
+                    
+                </ul>
+
+                
+
+                
+
+
+                <!--加入新的评论系统-->
+                
+
+                
+
+            </div>
+
+            <div class="hidden-xs col-sm-3 toc-col">
+                <div class="toc-wrap">
+                    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#事务特性（ACID"><span class="toc-text">事务特性（ACID)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#事务特性（ACID-1"><span class="toc-text">事务特性（ACID)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#事务的隔离级别"><span class="toc-text">事务的隔离级别</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#脏读、幻读、不可重复读"><span class="toc-text">脏读、幻读、不可重复读</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#mysql日志"><span class="toc-text">mysql日志</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#数据表结构"><span class="toc-text">数据表结构</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#索引原理"><span class="toc-text">索引原理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#B-Tree、B-Tree"><span class="toc-text">B+Tree、B-Tree</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#聚集索引与非聚集索引"><span class="toc-text">聚集索引与非聚集索引</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#最左匹配原则"><span class="toc-text">最左匹配原则</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#建索引的原则"><span class="toc-text">建索引的原则</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#sql优化"><span class="toc-text">sql优化</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#myisam与innodb的区别"><span class="toc-text">myisam与innodb的区别</span></a></li></ol>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <!-- Sidebar Container -->
+
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
+
+                <!-- Friends Blog -->
+                
+            </div>
+        </div>
+
+    </div>
+</article>
+
+
+
+
+
+
+
+<!-- Footer -->
+<!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 text-center">
+                <br>
+                <ul class="list-inline text-center">
+                
+                
+                
+
+                
+
+                
+
+                
+
+                
+
+                </ul>
+                <p class="copyright text-muted">
+                    Copyright &copy; Learn IT Well 2018
+                    <br>
+                    <span id="busuanzi_container_site_pv" style="font-size: 12px;">PV: <span id="busuanzi_value_site_pv"></span> Times</span>
+                    <br>
+                    Theme by <a href="https://haojen.github.io/">Haojen Ma</a>
+                </p>
+
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js"></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js"></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/blog.js"></script>
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+<!-- jquery.tagcloud.js -->
+<script>
+    // only load tagcloud.js in tag.html
+    if($('#tag_cloud').length !== 0){
+        async("http://learnitwell.net/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                //size: {start: 1, end: 1, unit: 'em'},
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+<!--fastClick.js -->
+<script>
+    async("//cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+
+<!-- Google Analytics -->
+
+
+
+<!-- Baidu Tongji -->
+
+
+<!-- swiftype -->
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+  (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+  e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install','','2.0.0');
+</script>
+
+<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+<!--wechat title img-->
+<img class="wechat-title-img" src="">
+</body>
+
+</html>

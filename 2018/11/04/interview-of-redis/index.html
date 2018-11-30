@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head><meta name="generator" content="Hexo 3.8.0">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="learnitwell是一个专注于IT技术分享的网站">
+    <meta name="keyword" content="">
+    <meta name="theme-color" content="#600090">
+    <meta name="msapplication-navbutton-color" content="#600090">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="#600090">
+    <link rel="shortcut icon" href="https://cdn4.iconfinder.com/data/icons/ionicons/512/icon-person-128.png">
+    <link rel="alternate" type="application/atom+xml" title="Learn IT Well" href="/atom.xml">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">
+    <link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.css">
+    <title>
+        
+        后端开发面试知识点之redis｜undefined
+        
+    </title>
+
+    <link rel="canonical" href="http://learnitwell.net/2018/11/04/interview-of-redis/">
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/blog-style.css">
+
+    <!-- Pygments Github CSS -->
+    <link rel="stylesheet" href="/css/syntax.css">
+</head>
+
+<style>
+
+    header.intro-header {
+        background-image: url('')
+    }
+</style>
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="" class="animated fadeIn">
+<!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top " id="nav-top" data-ispost="true" data-istags="false
+" data-ishome="false">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand animated pulse" href="/">
+                <span class="brand-logo">
+                    Learn IT Well
+                </span>
+                's Blog
+            </a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <!-- Known Issue, found by Hux:
+            <nav>'s height woule be hold on by its content.
+            so, when navbar scale out, the <nav> will cover tags.
+            also mask any touch event of tags, unfortunately.
+        -->
+        <!-- /.navbar-collapse -->
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+					
+                    
+                        
+							
+                        <li>
+                            <a href="/about/">关于</a>
+                        </li>
+							
+						
+                    
+					
+					
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!-- /.container -->
+</nav>
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+//    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        // CLOSE
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        // OPEN
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+<!-- Main Content -->
+
+<!--only post-->
+
+
+<img class="wechat-title-img" src="">
+
+
+<style>
+    
+    header.intro-header {
+        background-image: url('')
+    }
+
+    
+</style>
+
+<header class="intro-header">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 text-center">
+                <div class="post-heading">
+                    <h1>后端开发面试知识点之redis</h1>
+                    
+                    <span class="meta">
+                         作者 艾逗笔
+                        <span>
+                          日期 2018-11-04
+                         </span>
+                    </span>
+                    <div class="tags text-center">
+                        
+                        <a class="tag" href="/tags/#后端开发" title="后端开发">后端开发</a>
+                        
+                        <a class="tag" href="/tags/#面试" title="面试">面试</a>
+                        
+                        <a class="tag" href="/tags/#redis" title="redis">redis</a>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="post-title-haojen">
+        <span>
+            后端开发面试知识点之redis
+        </span>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+            <!-- Post Container -->
+            <div class="col-lg-8 col-lg-offset-1 col-sm-9 post-container">
+                <h2 id="什么是Redis"><a href="#什么是Redis" class="headerlink" title="什么是Redis"></a>什么是Redis</h2><ul>
+<li>Redis是一种基于内存的高性能key-value数据库，可以每秒处理超过10万次读写操作。</li>
+<li>Redis支持丰富的数据类型，单个value存储的数据最大限制是1GB。</li>
+<li>Redis的主要缺点是数据库容量受到物理内存的限制，不能用作海量数据的高性能读写，适合应用在较小数据量的高性能操作运算上。</li>
+</ul>
+<h2 id="redis为什么这么快"><a href="#redis为什么这么快" class="headerlink" title="redis为什么这么快"></a>redis为什么这么快</h2><ul>
+<li>完全基于内存，绝大部分请求是纯粹的内存操作，非常迅速</li>
+<li>数据结构简单，对数据的操作也简单</li>
+<li>采用单线程，避免了不必要的上下文切换和竞争条件，不存在加锁解锁操作，不会出现死锁而消耗性能</li>
+<li>使用多路复用非阻塞IO模型</li>
+<li>构建了自己的VM，在系统调用层面省去了请求开销</li>
+</ul>
+<h2 id="使用redis有哪些好处"><a href="#使用redis有哪些好处" class="headerlink" title="使用redis有哪些好处"></a>使用redis有哪些好处</h2><ul>
+<li>速度快。redis数据是存在内存中的，查找和操作的时间复杂度都是O(1)</li>
+<li>支持丰富的数据类型。string、list、hash、set、sortedSet</li>
+<li>支持事务。可以保证操作的原子性</li>
+<li>丰富的特性。可用于缓存数据、消息队列、设置过期时间等</li>
+</ul>
+<h2 id="redis与memcached有哪些区别"><a href="#redis与memcached有哪些区别" class="headerlink" title="redis与memcached有哪些区别"></a>redis与memcached有哪些区别</h2><ul>
+<li>memcached只能存储简单的数据类型（字符串和二进制数据），redis支持更加丰富的数据类型</li>
+<li>redis的速度比memcached更快</li>
+<li>memcached数据全部存在内存中，断电后会挂掉，存储的数据不能超过内存大小。redis有部分数据存在硬盘上，支持数据的持久化</li>
+<li>redis是单线程的，memcached是单进程多线程的</li>
+<li>redis的key和value的大小限制都是512M，memcached的key最大为250字节，value最大为1M</li>
+</ul>
+<h2 id="redis应用场景"><a href="#redis应用场景" class="headerlink" title="redis应用场景"></a>redis应用场景</h2><ul>
+<li>会话缓存</li>
+<li>全页缓存</li>
+<li>消息队列</li>
+<li>排行榜/计数器</li>
+<li>发布订阅</li>
+</ul>
+<h2 id="redis的持久化方式aof与rdb的比较"><a href="#redis的持久化方式aof与rdb的比较" class="headerlink" title="redis的持久化方式aof与rdb的比较"></a>redis的持久化方式aof与rdb的比较</h2><ul>
+<li>rdb在不同的时间点，对redis存储的数据生成快照并写入磁盘；aof将redis执行的写操作命令追加到文件，恢复数据的时候将记录的命令执行一遍</li>
+<li>rdb与aof两种持久化方式可以同时使用，数据恢复时优先使用aof文件进行恢复</li>
+<li>aof生成的文件要比rdb生成的大，恢复数据时，aof方式要比rdb慢</li>
+<li>aof方式恢复数据完整性比rdb高</li>
+<li>rdb通过save和bgsave命令来控制数据备份，aof支持重写方式优化aof文件过大的问题</li>
+</ul>
+<h2 id="redis事务控制"><a href="#redis事务控制" class="headerlink" title="redis事务控制"></a>redis事务控制</h2><ul>
+<li>ACID特性</li>
+<li>MULTI/EXEC/DISCARD/WATCH命令</li>
+</ul>
+<h2 id="pipeline与multi的区别"><a href="#pipeline与multi的区别" class="headerlink" title="pipeline与multi的区别"></a>pipeline与multi的区别</h2><ul>
+<li>pipeline使用客户端缓冲；multi使用服务端缓冲</li>
+<li>multi每一条命令都需要发送一次服务端请求；pipeline使用exec最后一次性发送给服务端</li>
+<li>multi可以保证数据操作的原子性；pipeline无法保证原子性</li>
+</ul>
+<h2 id="redis主从复制"><a href="#redis主从复制" class="headerlink" title="redis主从复制"></a>redis主从复制</h2><ul>
+<li>当一个从数据库启动时，会向主数据库发送sync命令</li>
+<li>主数据库接收到sync命令后会开始在后台执行rdb保存快照操作，并在快照保存期间缓存接收到的命令</li>
+<li>快照保存完成后，主数据库将快照文件和缓存的命令一起发送给从数据库</li>
+<li>从数据库根据接收到的快照文件和缓存命令载入数据</li>
+</ul>
+<h2 id="redis高可用方案：哨兵模式（sentinel）"><a href="#redis高可用方案：哨兵模式（sentinel）" class="headerlink" title="redis高可用方案：哨兵模式（sentinel）"></a>redis高可用方案：哨兵模式（sentinel）</h2><ul>
+<li>监控：sentinel实时监控主数据库和从数据库的状态，并实现自动切换</li>
+<li>提醒：当监控的某个redis服务器出现问题时候，sentinel可以给系统管理员发送通知</li>
+<li>自动故障转移：当一个主服务器不能正常工作时候，sentinel将一个从服务器提升为从服务器</li>
+</ul>
+<h2 id="redis集群：Cluster"><a href="#redis集群：Cluster" class="headerlink" title="redis集群：Cluster"></a>redis集群：Cluster</h2><ul>
+<li>三主三从</li>
+<li>hash槽点（16348）</li>
+</ul>
+<h2 id="redis数据淘汰策略"><a href="#redis数据淘汰策略" class="headerlink" title="redis数据淘汰策略"></a>redis数据淘汰策略</h2><ul>
+<li>volatile-lru：从已设置过期时间的数据集中挑选最近最少使用的数据淘汰</li>
+<li>volatile-ttl：从已设置过期时间的数据集中挑选将要过期的数据淘汰</li>
+<li>volatile-random：从已设置过期时间的数据集中任意选择数据淘汰</li>
+<li>allkeys-lru：从数据集中挑选最近最少使用的数据淘汰</li>
+<li>allkeys-random：从数据集中任意选择数据淘汰</li>
+<li>no-enviction（驱逐）：禁止驱逐数据</li>
+</ul>
+<h2 id="redis过期删除策略"><a href="#redis过期删除策略" class="headerlink" title="redis过期删除策略"></a>redis过期删除策略</h2><ul>
+<li>定时删除：在设置键的过期时间的同时，创建一个定时器，让定时器在键的过期时间达到时，立即删除键。这种方式对内存友好，但是浪费CPU资源</li>
+<li>惰性删除：获取键的时候，判断键是否过期，如果过期则删除、这种方式对CPU友好，但是浪费内存</li>
+<li>定期删除：每隔一段时间，就对数据做一次扫描，从每个数据库中随机选择部分过期的键进行删除。</li>
+</ul>
+<h2 id="redis数据丢失"><a href="#redis数据丢失" class="headerlink" title="redis数据丢失"></a>redis数据丢失</h2><ul>
+<li>程序bug或人为误操作引起的，比如执行flushdb之类的命令</li>
+<li>缓存区内存不足触发数据自动淘汰策略；可以合理调大maxmemory</li>
+<li>主从同步故障重启后导致的数据丢失</li>
+<li>网络分区环境下可能导致数据短时间内写入丢失</li>
+<li>主从复制数据不一致切换后导致的数据丢失</li>
+<li>大量过期键被删除，让业务方以为数据丢失</li>
+</ul>
+<h2 id="redis常见性能问题和解决方案"><a href="#redis常见性能问题和解决方案" class="headerlink" title="redis常见性能问题和解决方案"></a>redis常见性能问题和解决方案</h2><ul>
+<li>master最好不要做任何持久化方式，如rbd快照和aof日志文件</li>
+<li>如果需要持久化数据，可以在slave开启aof数据备份，设置每秒同步一次</li>
+<li>为了主从复制的稳定性，master和slave最好在同一个局域网内</li>
+<li>尽量避免在压力很大的主库上增加从库</li>
+<li>主从复制不要用图状结构，改用单向链表结构</li>
+</ul>
+<h2 id="redis有序集合的实现方式"><a href="#redis有序集合的实现方式" class="headerlink" title="redis有序集合的实现方式"></a>redis有序集合的实现方式</h2><ul>
+<li>压缩列表：ziplist</li>
+<li>跳跃表：skiplist</li>
+</ul>
+<h2 id="redis键冲突"><a href="#redis键冲突" class="headerlink" title="redis键冲突"></a>redis键冲突</h2><ul>
+<li>开放地址法</li>
+<li>链地址法</li>
+<li>rehash</li>
+</ul>
+<h2 id="提高缓存命中率的方式"><a href="#提高缓存命中率的方式" class="headerlink" title="提高缓存命中率的方式"></a>提高缓存命中率的方式</h2><ul>
+<li>设置尽可能小的缓存粒度</li>
+<li>调整缓存过期自动回收策略</li>
+<li>增加存储容量</li>
+<li>缓存预加载（预热）</li>
+</ul>
+<h2 id="使用redis实现分布式锁"><a href="#使用redis实现分布式锁" class="headerlink" title="使用redis实现分布式锁"></a>使用redis实现分布式锁</h2><ul>
+<li><p>setnx</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SETNX lock.foo &lt;current Unix time + lock timeout + 1&gt;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>getset</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">GETSET lock.foo &lt;current Unix timestamp + lock timeout + 1&gt;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h2 id="缓存雪崩-缓存穿透-缓存预热-缓存更新-缓存降级"><a href="#缓存雪崩-缓存穿透-缓存预热-缓存更新-缓存降级" class="headerlink" title="缓存雪崩/缓存穿透/缓存预热/缓存更新/缓存降级"></a>缓存雪崩/缓存穿透/缓存预热/缓存更新/缓存降级</h2><ul>
+<li>缓存雪崩：设置的缓存在同一时间失效，导致大量请求直接读写数据库，造成数据库压力；解决办法有使用锁或队列控制数据库的并发读写、设置过期标识更新缓存、为缓存设置不同的过期时间等。</li>
+<li>缓存穿透：在数据库中不存在的数据，每次都需要在缓存和数据库中分别查询。解决办法：使用布隆过滤器，对空数据也进行缓存，使用一个缓存区域存储空值等。</li>
+<li>缓存预热：将需要缓存的数据手动刷新进缓存中。方案：写个刷新页面上线的时候操作下，定时刷新缓存</li>
+<li>缓存更新：自定义缓存淘汰策略。方案：定时清理过期的缓存，用户请求过来时候判断缓存过期</li>
+<li>缓存降级：对一些非关键数据做开关、设置人工降级策略</li>
+</ul>
+
+                <hr>
+                
+
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/2018/11/05/interview-of-mysql/" data-toggle="tooltip" data-placement="top" title="后端开发面试知识点之mysql">&larr; Previous Post</a>
+                    </li>
+                    
+                    
+                </ul>
+
+                
+
+                
+
+
+                <!--加入新的评论系统-->
+                
+
+                
+
+            </div>
+
+            <div class="hidden-xs col-sm-3 toc-col">
+                <div class="toc-wrap">
+                    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#什么是Redis"><span class="toc-text">什么是Redis</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#redis为什么这么快"><span class="toc-text">redis为什么这么快</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#使用redis有哪些好处"><span class="toc-text">使用redis有哪些好处</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#redis与memcached有哪些区别"><span class="toc-text">redis与memcached有哪些区别</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#redis应用场景"><span class="toc-text">redis应用场景</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#redis的持久化方式aof与rdb的比较"><span class="toc-text">redis的持久化方式aof与rdb的比较</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#redis事务控制"><span class="toc-text">redis事务控制</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#pipeline与multi的区别"><span class="toc-text">pipeline与multi的区别</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#redis主从复制"><span class="toc-text">redis主从复制</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#redis高可用方案：哨兵模式（sentinel）"><span class="toc-text">redis高可用方案：哨兵模式（sentinel）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#redis集群：Cluster"><span class="toc-text">redis集群：Cluster</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#redis数据淘汰策略"><span class="toc-text">redis数据淘汰策略</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#redis过期删除策略"><span class="toc-text">redis过期删除策略</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#redis数据丢失"><span class="toc-text">redis数据丢失</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#redis常见性能问题和解决方案"><span class="toc-text">redis常见性能问题和解决方案</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#redis有序集合的实现方式"><span class="toc-text">redis有序集合的实现方式</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#redis键冲突"><span class="toc-text">redis键冲突</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#提高缓存命中率的方式"><span class="toc-text">提高缓存命中率的方式</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#使用redis实现分布式锁"><span class="toc-text">使用redis实现分布式锁</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#缓存雪崩-缓存穿透-缓存预热-缓存更新-缓存降级"><span class="toc-text">缓存雪崩/缓存穿透/缓存预热/缓存更新/缓存降级</span></a></li></ol>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <!-- Sidebar Container -->
+
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
+
+                <!-- Friends Blog -->
+                
+            </div>
+        </div>
+
+    </div>
+</article>
+
+
+
+
+
+
+
+<!-- Footer -->
+<!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 text-center">
+                <br>
+                <ul class="list-inline text-center">
+                
+                
+                
+
+                
+
+                
+
+                
+
+                
+
+                </ul>
+                <p class="copyright text-muted">
+                    Copyright &copy; Learn IT Well 2018
+                    <br>
+                    <span id="busuanzi_container_site_pv" style="font-size: 12px;">PV: <span id="busuanzi_value_site_pv"></span> Times</span>
+                    <br>
+                    Theme by <a href="https://haojen.github.io/">Haojen Ma</a>
+                </p>
+
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js"></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js"></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/blog.js"></script>
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+<!-- jquery.tagcloud.js -->
+<script>
+    // only load tagcloud.js in tag.html
+    if($('#tag_cloud').length !== 0){
+        async("http://learnitwell.net/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                //size: {start: 1, end: 1, unit: 'em'},
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+<!--fastClick.js -->
+<script>
+    async("//cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+
+<!-- Google Analytics -->
+
+
+
+<!-- Baidu Tongji -->
+
+
+<!-- swiftype -->
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+  (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+  e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install','','2.0.0');
+</script>
+
+<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+<!--wechat title img-->
+<img class="wechat-title-img" src="">
+</body>
+
+</html>
